@@ -8,12 +8,13 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-public class ClientMain {
+public class ClientMain extends Thread {
 	private static String serverName;
 	private static int portNumber;
 	private static BufferedReader inputStream;
 	private static DataOutputStream outputStream;
 	private static Scanner in;
+	private boolean listeningThread = true;
 
 	public ClientMain() {
 		in = new Scanner(System.in);
@@ -22,24 +23,45 @@ public class ClientMain {
 		System.out.println("Enter port Number");
 		portNumber = in.nextInt();
 
-	}
-
-	public static void main(String[] args) throws IOException {
-
-		ClientMain newClient = new ClientMain();
-
 		try{
 			System.out.println("Trying to connect to server " + serverName +  "on port" + portNumber );
 			Socket clientSocket = new Socket(serverName, portNumber);
 			System.out.println("Connected to:" + clientSocket.getRemoteSocketAddress());
+
+
 			inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			outputStream = new DataOutputStream(clientSocket.getOutputStream());
+
 			System.out.println(inputStream.readLine());
 
 		}catch(IOException ex) {
 			System.err.println("Could not connect to server.");
 			ex.printStackTrace();
 		}
+
+		this.start();
+
+	}
+
+	public void run() {
+		while(listeningThread) {
+			String sentence = null;
+			try {
+				sentence = inputStream.readLine();
+				if(sentence != null && sentence.length() != 0) {
+					System.out.println("Reply:" + sentence);
+				}
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+
+		ClientMain newClient = new ClientMain();
 
 		System.out.println("Chat:");
 		while(true) {

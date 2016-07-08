@@ -25,15 +25,21 @@ public class ServerMain{
 		}
 		
 		while(true) {
-			Thread newServerThread = new ServerThread(serverSocket.accept());
+			Thread newServerThread = new ServerThread(serverSocket.accept(), this);
 			newServerThread.start();
 			serverThreads.add((ServerThread) newServerThread);
 		}
 
 	}
-
+ 
 	public static void main(String[] args) throws IOException {
 		ServerMain newServer = new ServerMain(3000);
+	}
+	
+	public void send(String sentence) throws IOException {
+		for(ServerThread thread: serverThreads) {
+			thread.sendMessage(sentence);
+		}
 	}
 
 }
