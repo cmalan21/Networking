@@ -15,6 +15,7 @@ public class ServerThread extends Thread{
 	private DataOutputStream outputStream;
 	private BufferedReader inputStream;
 	private ServerMain mainServer;
+	private String username;
 
 	public ServerThread(Socket clientSocket, ServerMain server) throws IOException {
 		this.mainServer = server;
@@ -27,8 +28,11 @@ public class ServerThread extends Thread{
 
 	public void run() {
 		try {
-			outputStream.writeBytes("Welcome " + socket.getRemoteSocketAddress() + '.' + '\n');
+			username = inputStream.readLine();
+			outputStream.writeBytes("Welcome " + username + '.' + '\n');
 			outputStream.flush();
+			mainServer.addUser(username, this);
+			mainServer.connectedNotification(username);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -36,10 +40,8 @@ public class ServerThread extends Thread{
 			try {
 				String sentence = inputStream.readLine();
 				if(sentence != null && sentence.length() != 0) {
-					System.out.println(socket.getRemoteSocketAddress() + " says: " + sentence);
-					mainServer.send(sentence);
-
-
+					System.out.println(username + " says: " + sentence);
+					mainServer.send(username + "\\" + sentence);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
