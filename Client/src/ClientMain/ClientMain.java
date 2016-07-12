@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
+
+import javax.swing.JFrame;
+
+import ClientInterface.ClientInterface;
 
 public class ClientMain extends Thread {
 	private static String serverName;
@@ -26,7 +28,7 @@ public class ClientMain extends Thread {
 		serverName = in.nextLine().toString();
 		System.out.println("Enter port Number:");
 		portNumber = in.nextInt();
-
+		JFrame newIntereface = new ClientInterface();
 
 		try{
 			System.out.println("Trying to connect to server " + serverName +  "on port" + portNumber );

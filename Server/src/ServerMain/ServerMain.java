@@ -53,7 +53,6 @@ public class ServerMain{
 				}	
 			}
 		}
-		
 	}
 	
 	public void send(String sentence) throws IOException {
