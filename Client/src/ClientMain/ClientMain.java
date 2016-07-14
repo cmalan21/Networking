@@ -6,10 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Scanner;
-
 import javax.swing.JFrame;
-
-import ClientInterface.ClientInterface;
+import javax.swing.SwingUtilities;
 
 public class ClientMain extends Thread {
 	private static String serverName;
@@ -28,8 +26,7 @@ public class ClientMain extends Thread {
 		serverName = in.nextLine().toString();
 		System.out.println("Enter port Number:");
 		portNumber = in.nextInt();
-		JFrame newIntereface = new ClientInterface();
-
+		
 		try{
 			System.out.println("Trying to connect to server " + serverName +  "on port" + portNumber );
 			Socket clientSocket = new Socket(serverName, portNumber);
@@ -70,13 +67,21 @@ public class ClientMain extends Thread {
 	}
 
 	public static void main(String[] args) throws IOException {
-		ClientMain newClient = new ClientMain();
-		System.out.println("Chat:");
-		while(true) {
-			String sentence = in.nextLine();
-			outputStream.writeBytes(sentence + '\n');
-			outputStream.flush();
-		}
+		//ClientMain newClient = new ClientMain();
+		SwingUtilities.invokeLater(new Runnable() {
+		    public void run() {
+		    	JFrame newIntereface = new ClientInterface();
+		  
+		    }
+		});
+		
+		
+//		System.out.println("Chat:");
+//		while(true) {
+//			String sentence = in.nextLine();
+//			outputStream.writeBytes(sentence + '\n');
+//			outputStream.flush();
+//		}
 	}
 
 }
