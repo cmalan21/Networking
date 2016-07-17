@@ -13,36 +13,16 @@ public class ClientMain extends Thread {
 	private static String serverName;
 	private static int portNumber;
 	private static BufferedReader inputStream;
-	private static DataOutputStream outputStream;
-	private static Scanner in;
+
 	private boolean listeningThread = true;
 	private String username;
+	private JFrame newIntereface;
 
 	public ClientMain() {
-		in = new Scanner(System.in);
-		System.out.println("Enter Username:");
-		username = in.nextLine().toString();
-		System.out.println("Enter Server name:");
-		serverName = in.nextLine().toString();
-		System.out.println("Enter port Number:");
-		portNumber = in.nextInt();
-		
-		try{
-			System.out.println("Trying to connect to server " + serverName +  "on port" + portNumber );
-			Socket clientSocket = new Socket(serverName, portNumber);
-			System.out.println("Connected to:" + clientSocket.getRemoteSocketAddress());
-
-			inputStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			outputStream = new DataOutputStream(clientSocket.getOutputStream());
-			outputStream.writeBytes(username + '\n');
-
-			System.out.println(inputStream.readLine());
-
-		}catch(IOException ex) {
-			System.err.println("Could not connect to server.");
-			ex.printStackTrace();
-		}
-
+		newIntereface = new ClientInterface(this);
+	}
+	
+	public void startListeningThread() {
 		this.start();
 	}
 
@@ -67,15 +47,13 @@ public class ClientMain extends Thread {
 	}
 
 	public static void main(String[] args) throws IOException {
-		//ClientMain newClient = new ClientMain();
 		SwingUtilities.invokeLater(new Runnable() {
 		    public void run() {
-		    	JFrame newIntereface = new ClientInterface();
-		  
+		        new ClientMain();
 		    }
 		});
-		
-		
+
+			
 //		System.out.println("Chat:");
 //		while(true) {
 //			String sentence = in.nextLine();
